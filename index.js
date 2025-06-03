@@ -5,6 +5,7 @@ import cors from "cors";
 import { connectDB } from "./db/connection.js";
 import authRoutes from "./routes/authRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import suppliersRoutes from "./routes/suppliersRoutes.js";
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 //! App Routes:
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/supplier", suppliersRoutes);
 
 //! MongoDB Database Connection & App Server Status:
 app.listen(PORT, () => {
