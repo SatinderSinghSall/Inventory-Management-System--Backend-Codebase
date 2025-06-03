@@ -1,30 +1,20 @@
 import Supplier from "../models/Supplier.js";
 import Product from "../models/Product.js";
 
-//! Route to add a new employee
+//! To add a new Supplier:
 const addSupplier = async (req, res) => {
   try {
     const { name, email, phone, address } = req.body;
 
-    // Check if user already exists with the same email
-    let existingSupplier = await Supplier.findOne({ email });
+    const existingSupplier = await Supplier.findOne({ email });
     if (existingSupplier) {
       return res
         .status(400)
         .json({ success: false, error: "Supplier already exists" });
     }
 
-    // Hash the password before storing the user
-    // const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    const newSupplier = new Supplier({
-      name,
-      email,
-      phone,
-      address,
-    });
-    const supplier = await newSupplier.save();
+    const newSupplier = new Supplier({ name, email, phone, address });
+    await newSupplier.save();
 
     res
       .status(201)
@@ -35,10 +25,11 @@ const addSupplier = async (req, res) => {
   }
 };
 
+//! To get Supplier:
 const getSuppliers = async (req, res) => {
   try {
     const suppliers = await Supplier.find();
-    res.status(201).json({ success: true, suppliers });
+    res.status(200).json({ success: true, suppliers });
   } catch (error) {
     res
       .status(500)
@@ -46,30 +37,34 @@ const getSuppliers = async (req, res) => {
   }
 };
 
+//! To update the Supplier:
 const updateSupplier = async (req, res) => {
   try {
     const { id } = req.params;
     const { name, email, phone, address } = req.body;
 
-    const supplier = await Supplier.findById({ _id: id });
-    if (!supplier) {
-      res.status(404).json({ success: false, error: "Supplier Not Found" });
-    }
-
-    const updateUser = await Supplier.findByIdAndUpdate(
-      { _id: id },
-      { name, email, phone, address }
+    const updatedSupplier = await Supplier.findByIdAndUpdate(
+      id,
+      { name, email, phone, address },
+      { new: true }
     );
 
-    res.status(201).json({ success: true, updateUser });
+    if (!updatedSupplier) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Supplier Not Found" });
+    }
+
+    res.status(200).json({ success: true, updatedSupplier });
   } catch (error) {
-    console.error("Error editing employee:", error);
+    console.error("Error updating supplier:", error);
     res
       .status(500)
       .json({ success: false, error: "Server error " + error.message });
   }
 };
 
+//! To delete a Supplier
 const deleteSupplier = async (req, res) => {
   try {
     const { id } = req.params;
@@ -82,15 +77,16 @@ const deleteSupplier = async (req, res) => {
       });
     }
 
-    const supplier = await Supplier.findByIdAndDelete({ _id: id });
+    const supplier = await Supplier.findByIdAndDelete(id);
     if (!supplier) {
-      res
+      return res
         .status(404)
-        .json({ success: false, error: "document not found " + error.message });
+        .json({ success: false, error: "Supplier not found" });
     }
-    res.status(201).json({ success: true, supplier });
+
+    res.status(200).json({ success: true, supplier });
   } catch (error) {
-    console.error("Error editing employee:", error);
+    console.error("Error deleting supplier:", error);
     res
       .status(500)
       .json({ success: false, error: "Server error " + error.message });
