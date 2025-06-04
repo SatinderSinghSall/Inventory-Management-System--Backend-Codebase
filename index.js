@@ -6,6 +6,7 @@ import { connectDB } from "./db/connection.js";
 import authRoutes from "./routes/authRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import suppliersRoutes from "./routes/suppliersRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/supplier", suppliersRoutes);
+app.use("/api/products", productRoutes);
 
 //! MongoDB Database Connection & App Server Status:
 app.listen(PORT, () => {

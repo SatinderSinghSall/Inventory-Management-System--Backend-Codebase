@@ -1,0 +1,114 @@
+import Category from "../models/Category.js";
+import Product from "../models/Product.js";
+import Supplier from "../models/Supplier.js";
+
+//! Route to add a new product:
+const addProduct = async (req, res) => {
+  try {
+    const { name, description, price, stock, category, supplier } = req.body;
+
+    // Optional: basic validation
+    if (!name || !price || !stock || !category || !supplier) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Missing required fields" });
+    }
+
+    const newProduct = new Product({
+      name,
+      description,
+      price,
+      stock,
+      category,
+      supplier,
+    });
+
+    const product = await newProduct.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      product,
+    });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ success: false, error: "Server error" });
+  }
+};
+
+//! Route to get all products:
+const getProducts = async (req, res) => {
+  try {
+    const products = await Product.find({ isDeleted: false })
+      .populate("category")
+      .populate("supplier");
+    const categories = await Category.find();
+    const suppliers = await Supplier.find();
+
+    res.status(200).json({ success: true, products, categories, suppliers });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, error: "Server error " + error.message });
+  }
+};
+
+//! Route to update a product:
+const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, description, price, stock, category, supplier } = req.body;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Product not found" });
+    }
+
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      { name, description, price, stock, category, supplier },
+      { new: true } // Return updated document
+    );
+
+    res.status(200).json({ success: true, product: updatedProduct });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Server error " + error.message });
+  }
+};
+
+//! Route to soft delete a product:
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Product not found" });
+    }
+
+    if (product.isDeleted) {
+      return res
+        .status(400)
+        .json({ success: false, error: "Product is already deleted" });
+    }
+
+    await Product.updateOne({ _id: id }, { isDeleted: true });
+    const updatedProduct = await Product.findById(id);
+
+    return res.status(200).json({ success: true, product: updatedProduct });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return res
+      .status(500)
+      .json({ success: false, error: "Server error " + error.message });
+  }
+};
+
+export { addProduct, getProducts, updateProduct, deleteProduct };
