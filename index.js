@@ -9,6 +9,7 @@ import suppliersRoutes from "./routes/suppliersRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 //! App Routes:
+app.use("/api/dashboard", dashboardRouter);
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/supplier", suppliersRoutes);
