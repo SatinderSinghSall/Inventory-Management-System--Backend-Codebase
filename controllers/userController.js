@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
-// Create a new user
+//! Create a new user:
 const addUser = async (req, res) => {
   try {
     const { name, email, password, role, address } = req.body;
@@ -40,7 +40,7 @@ const addUser = async (req, res) => {
   }
 };
 
-// Get all users
+//! Get all users:
 const getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
@@ -51,7 +51,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-// Get a single user
+//! Get a single user:
 const getUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -73,7 +73,7 @@ const getUser = async (req, res) => {
   }
 };
 
-// Update user
+//! Update user:
 const updateUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -103,7 +103,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Delete user
+//! Delete user:
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;

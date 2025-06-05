@@ -8,6 +8,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import suppliersRoutes from "./routes/suppliersRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/supplier", suppliersRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/order", orderRoutes);
 
 //! MongoDB Database Connection & App Server Status:
 app.listen(PORT, () => {
