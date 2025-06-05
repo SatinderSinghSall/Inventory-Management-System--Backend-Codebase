@@ -66,4 +66,25 @@ const getOrders = async (req, res) => {
   }
 };
 
-export { addOrder, getOrders };
+//! Route to delete order:
+const deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findById(id);
+    if (!order) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Order not found" });
+    }
+
+    await order.deleteOne();
+    return res
+      .status(200)
+      .json({ success: true, message: "Order deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { addOrder, getOrders, deleteOrder };
