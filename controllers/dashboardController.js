@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
 import User from "../models/User.js";
+import Supplier from "../models/Supplier.js";
 
 //!Dashboard Summary:
 const getSummary = async (req, res) => {
@@ -71,13 +72,16 @@ const getSummary = async (req, res) => {
     const highestSaleProduct = highestSaleResult[0] || {
       message: "No sales data available",
     };
+
     const totalUsers = await User.countDocuments();
+    const totalSuppliers = await Supplier.countDocuments();
 
     res.status(200).json({
       totalProducts,
       totalStock,
       ordersToday,
       revenue,
+      totalSuppliers,
       totalUsers,
       outOfStock,
       highestSaleProduct,
